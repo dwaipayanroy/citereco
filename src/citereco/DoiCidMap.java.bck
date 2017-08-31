@@ -1,0 +1,106 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package citereco;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+/**
+ *
+ * @author dwaipayan
+ */
+public class DoiCidMap implements Comparable<DoiCidMap>, Comparator<DoiCidMap> {
+    String      doi;
+    int         cid;
+
+    public DoiCidMap(String doi, int cid) {
+        this.doi = doi; this.cid = cid;
+    }
+    
+    @Override
+    public int compareTo(DoiCidMap u)
+    {
+      return doi.compareTo(u.getDOI());
+    }
+
+    @Override
+    public int compare(DoiCidMap u1, DoiCidMap u2)
+    {
+      return u1.getDOI().compareTo(u2.getDOI());
+    }
+
+    public String getDOI() { return doi; }
+    public int getCID() { return cid; }
+
+    /**
+     * 
+     * @param doi_cid_map_path: path of the doi-cid-map file
+     * @return doiCidList: doi-cid map (a list) of all the papers; SORTED on DOI.
+        To look-up the corresponding CID of a DOI, Collection.BinarySearch can be applied.
+     */
+    public static List<DoiCidMap> makeDoiCidList(String doi_cid_map_path) {
+
+        List<DoiCidMap> doiCidList = new ArrayList<>();
+        BufferedReader br;
+        String s;
+        try {
+            br = new BufferedReader(new FileReader(doi_cid_map_path));
+
+            String []tokens;
+            while ((s = br.readLine()) != null) {
+                tokens = s.split(" ");  // tokens[0] = DOI, tokens[1] = CID
+                doiCidList.add(new DoiCidMap(tokens[0], Integer.parseInt(tokens[1])));
+            }
+
+            // sorted on DOI
+            Collections.sort(doiCidList);
+        } catch (FileNotFoundException ex) {
+            System.err.println("Error: DOI-ClusterId-map file not present at: "
+                + doi_cid_map_path);
+            System.exit(1);
+        } catch (IOException ex) {
+            System.err.println("Error: IOException occured while reading from "
+                + "the DOI-ClusterId-map file");
+        }
+
+        return doiCidList;
+    }
+
+    public static List<DoiCidMap> makeDoiCidMap(String doi_cid_map_path) {
+
+        List<DoiCidMap> doiCidList = new ArrayList<>();
+        BufferedReader br;
+        String s;
+        try {
+            br = new BufferedReader(new FileReader(doi_cid_map_path));
+
+            String []tokens;
+            while ((s = br.readLine()) != null) {
+                tokens = s.split(" ");  // tokens[0] = DOI, tokens[1] = CID
+                doiCidList.add(new DoiCidMap(tokens[0], Integer.parseInt(tokens[1])));
+            }
+
+            // sorted on DOI
+            Collections.sort(doiCidList);
+        } catch (FileNotFoundException ex) {
+            System.err.println("Error: DOI-ClusterId-map file not present at: "
+                + doi_cid_map_path);
+            System.exit(1);
+        } catch (IOException ex) {
+            System.err.println("Error: IOException occured while reading from "
+                + "the DOI-ClusterId-map file");
+        }
+
+        return doiCidList;
+    }
+
+}
